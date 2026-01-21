@@ -30,7 +30,8 @@ async function addProduct() {
 
   const data = await res.json();
   if (!res.ok) return alert(data.error);
-  alert('Product added');
+
+  alert(`Product added: ${data.name} - $${data.price}`);
   getProducts();
 }
 
