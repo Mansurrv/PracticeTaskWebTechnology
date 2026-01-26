@@ -1,11 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const fs = require('node:fs')
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3030;
 const MONGO_URI = process.env.MONGO_URI;
+
+const date = require('date-and-time')
+const now = new Date()
+const value = date.format(now, "YYYY/MM/DD HH:mm:ss")
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log("Connected to MongoDB"))
@@ -92,6 +97,23 @@ app.get("/api/products/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid ID" });
   }
 });
+
+app.get("/version", async(req, res) => {
+  try{
+    return res.status(200).json({ version: "1.1", updatedAt: value})
+  }
+  catch (err){
+    res.status(400).json({ error: "No found json" })
+  }
+})
+
+app.get("/health", async(req, res) => {
+  try{
+    return res.status(200).json({ status: "ok" })
+  } catch (err){
+    res.status(400).json({ error: "No found json" })
+  }
+})
 
 app.post("/api/products", async (req, res) => {
   const { name, price } = req.body;
